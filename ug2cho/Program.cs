@@ -133,7 +133,7 @@ class Program
         List<int> currChordStarts=null;
         List<string> currChords=null;
 
-        string[] lines = File.ReadAllLines(args[0]);
+        string[] lines = File.ReadAllLines(args[0]).Where(x => !(x.StartsWith("[") && x.EndsWith("]"))).ToArray();
         for(int i=0; i < lines.Length; ++i)
         {
             string currLine = lines[i];
