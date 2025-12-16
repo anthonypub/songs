@@ -548,7 +548,7 @@
 	      "size" : 12,
 	  },
 	  "comment_box" : {
-	      "name" : "Helvetica",
+	      "name" : "Helvetica-Bold",
 	      "size" : 12,
 	      "frame" : 1
 	  },
