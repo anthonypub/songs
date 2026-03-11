@@ -9,7 +9,7 @@ class Program
     static bool LooksLikeAChord(string str)
     {
         // root, potential sharp/flag, modifier
-        string chordRegex=@"[A-G](#|b)?(m|min|7|maj7|-7)?(/[A-G])?";
+        string chordRegex=@"^[A-G](#|b)?(m|min|7|maj7|-7)?(/[A-G])?$";
         return Regex.Match(str, chordRegex, RegexOptions.Compiled).Success;
     }
 
