@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Reflection.Metadata.Ecma335;
+using System.Text.RegularExpressions;
 
 namespace ug2cho;
 class Program
@@ -9,7 +10,7 @@ class Program
     static bool LooksLikeAChord(string str)
     {
         // root, potential sharp/flag, modifier
-        string chordRegex=@"^[A-G](#|b)?(m|min|7|maj7|-7)?(/[A-G])?$";
+        string chordRegex=@"^[A-G](#|b)?(m|min|7|maj7|-7|5)?(sus4|add9)?(/[A-G])?$";
         return Regex.Match(str, chordRegex, RegexOptions.Compiled).Success;
     }
 
@@ -95,17 +96,17 @@ class Program
         chords.Reverse();
         //int[] revStarts = chordStarts..Reverse();
         //string[] revChords = chords.Reverse();
-        if(chordStarts.Count != chords.Count)
+        if (chordStarts.Count != chords.Count)
         {
             throw new Exception($"chord starts and toks must have same length at line {line}");
         }
 
-        for(int i=0; i < chordStarts.Count; ++i)
+        for (int i = 0; i < chordStarts.Count; ++i)
         {
 
             int currStart = chordStarts[i];
 
-            if(currStart < 0)
+            if (currStart < 0)
             {
                 throw new Exception($"chord offset > length of line at line {line}");
             }
@@ -125,6 +126,19 @@ class Program
         return ret;
     }
 
+    static bool LooksLikeASectionMarker(string line)
+    {
+        var trimmed = line.Trim();
+        return trimmed.StartsWith("[") && trimmed.EndsWith("]");
+    }
+
+    static string MakeBox(string sectionMarker)
+    {
+        var trimmed = sectionMarker.Trim();
+        var noBrack = trimmed.Substring(1, trimmed.Length - 2);
+        return "{cb: " + noBrack + "}"; 
+    }
+
 
     static void Main(string[] args)
     {
@@ -133,10 +147,16 @@ class Program
         List<int> currChordStarts=null;
         List<string> currChords=null;
 
-        string[] lines = File.ReadAllLines(args[0]).Where(x => !(x.StartsWith("[") && x.EndsWith("]"))).ToArray();
+        //string[] lines = File.ReadAllLines(args[0]).Where(x => !(x.StartsWith("[") && x.EndsWith("]"))).ToArray();
+        string[] lines = File.ReadAllLines(args[0]).ToArray();
         for(int i=0; i < lines.Length; ++i)
         {
             string currLine = lines[i];
+            if(LooksLikeASectionMarker(currLine))
+            {
+                Console.WriteLine(MakeBox(currLine));
+                continue;
+            }
             if(LooksLikeAChordLine(currLine))
             {
                 if(currChordStarts != null)
