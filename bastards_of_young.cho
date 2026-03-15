@@ -4,10 +4,10 @@
 
 {cb: Intro}
 (solo guitar riff)
-| B   / / / | % | 
+| B / / / | % | 
 (add other instruments)
-| B   / / / | % | 
-| G#m / / / | % |
+| B / / / | % | 
+| E / / / | % |
 | B / / / |
 
 
@@ -37,7 +37,11 @@ I[E]t beats pickin' cotton or wa[F#]itin' to be fo[B]rgotten
 [C#m]Unwillingness to claim us, go[E]t no warrant to name us
 
 {cb: Solo (missing changes!)}
-[B]  [E] .... ?
+
+| B  | B | E  | E  |
+| B  | B | C# | F# |
+| C# | E | B  |
+
 
 {sov}
 [G#m]The ones love us be[B]st are the o[G#m]nes we'll lay to r[F#]est
@@ -47,4 +51,15 @@ I[E]f it's any consolation, I don[F#]'t begin to understand th[B]em
 {eov}
 
 {chorus}
-[D#m]Take it, it's yours...
+
+{cb: Outro}
+
+D# C# B x2 (fast)
+
+| E | E  | B | B |
+| E | E  | B | B |
+| E | F# | 
+
+D#m triplets
+
+Take it, it's yours...
