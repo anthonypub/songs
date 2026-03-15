@@ -154,6 +154,14 @@ class Program
             string currLine = lines[i];
             if(LooksLikeASectionMarker(currLine))
             {
+                // Special case: dump chords before section marker
+                if(currChordStarts != null)
+                {
+                    //throw new Exception($"Got two chord lines in a row at line {i}");
+                    Console.WriteLine(string.Join(' ', currChords));
+                    currChordStarts = null;
+                    currChords = null;
+                }
                 Console.WriteLine(MakeBox(currLine));
                 continue;
             }
@@ -161,7 +169,8 @@ class Program
             {
                 if(currChordStarts != null)
                 {
-                    throw new Exception($"Got two chord lines in a row at line {i}");
+                    //throw new Exception($"Got two chord lines in a row at line {i}");
+                    Console.WriteLine(string.Join(' ', currChords));
                 }
 
                 string[] toks = currLine.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
