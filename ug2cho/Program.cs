@@ -10,7 +10,7 @@ class Program
     static bool LooksLikeAChord(string str)
     {
         // root, potential sharp/flag, modifier
-        string chordRegex=@"^[A-G](#|b)?(m|min|7|maj7|-7|5)?(sus4|add9)?(/[A-G])?$";
+        string chordRegex=@"^[A-G](#|b)?(m|min|7|maj7|m7|-7|5)?(sus4|add9)?(/[A-G](#|b)?)?$";
         return Regex.Match(str, chordRegex, RegexOptions.Compiled).Success;
     }
 
@@ -136,7 +136,12 @@ class Program
     {
         var trimmed = sectionMarker.Trim();
         var noBrack = trimmed.Substring(1, trimmed.Length - 2);
-        return "{cb: " + noBrack + "}"; 
+        return "{cb: " + noBrack + "}";
+    }
+
+    static IEnumerable<string> BracketChords(IEnumerable<string> chords)
+    {
+        return chords.Select(x => $"[{x}]");
     }
 
 
@@ -149,33 +154,35 @@ class Program
 
         //string[] lines = File.ReadAllLines(args[0]).Where(x => !(x.StartsWith("[") && x.EndsWith("]"))).ToArray();
         string[] lines = File.ReadAllLines(args[0]).ToArray();
-        for(int i=0; i < lines.Length; ++i)
+        for (int i = 0; i < lines.Length; ++i)
         {
             string currLine = lines[i];
-            if(LooksLikeASectionMarker(currLine))
+            if (LooksLikeASectionMarker(currLine))
             {
                 // Special case: dump chords before section marker
-                if(currChordStarts != null)
+                if (currChordStarts != null)
                 {
                     //throw new Exception($"Got two chord lines in a row at line {i}");
-                    Console.WriteLine(string.Join(' ', currChords));
+                    Console.WriteLine(string.Join(' ', BracketChords(currChords)));
                     currChordStarts = null;
                     currChords = null;
                 }
                 Console.WriteLine(MakeBox(currLine));
                 continue;
             }
-            if(LooksLikeAChordLine(currLine))
+            if (LooksLikeAChordLine(currLine))
             {
-                if(currChordStarts != null)
+                if (currChordStarts != null)
                 {
                     //throw new Exception($"Got two chord lines in a row at line {i}");
-                    Console.WriteLine(string.Join(' ', currChords));
+                    Console.WriteLine(string.Join(' ', BracketChords(currChords)));
+                    currChordStarts = null;
+                    currChords = null;
                 }
 
                 string[] toks = currLine.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                 var starts = GetChordStarts(currLine);
-                if(starts.Count != toks.Length)
+                if (starts.Count != toks.Length)
                 {
                     throw new Exception($"Chord and tok count mismatch at line {currLine}");
                 }
@@ -183,9 +190,9 @@ class Program
                 currChords = new List<string>(toks);
             }
             // If we have chords to write out, write them and reset. 
-            else if(!string.IsNullOrWhiteSpace(currLine))
+            else if (!string.IsNullOrWhiteSpace(currLine))
             {
-                if(currChordStarts != null)
+                if (currChordStarts != null)
                 {
                     Console.WriteLine(CombineWordsAndChords(currLine, currChordStarts, currChords, i));
                     currChordStarts = null;
@@ -196,6 +203,12 @@ class Program
                     Console.WriteLine(currLine);
                 }
             }
+        }
+
+        // Dump any last chords
+        if(currChords != null)
+        {
+            Console.WriteLine(string.Join(' ', BracketChords(currChords)));
         }
     }
 }
