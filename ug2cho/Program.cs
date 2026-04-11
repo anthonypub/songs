@@ -91,6 +91,10 @@ class Program
     // Start at the back of the string so the forward-computed starts remain valid
     public static string CombineWordsAndChords(string wordLine, List<int> chordStarts, List<string> chords, int line)
     {
+        while (wordLine.Length < chordStarts.Max())
+        {
+            wordLine = wordLine + " ";
+        }
         string ret = wordLine;
         chordStarts.Reverse();
         chords.Reverse();
@@ -100,6 +104,8 @@ class Program
         {
             throw new Exception($"chord starts and toks must have same length at line {line}");
         }
+
+        
 
         for (int i = 0; i < chordStarts.Count; ++i)
         {
@@ -112,7 +118,8 @@ class Program
             }
             else if (wordLine.Length < currStart || currStart < 0)
             {
-                ret = ret + $"[{chords[i]}] ";
+                throw new Exception($"chord offset longer than line length {line}");
+                //ret = ret + $"[{chords[i]}] ";
             }
             else
             {
