@@ -151,6 +151,16 @@ class Program
         return chords.Select(x => $"[{x}]");
     }
 
+    static string[] GetInputLines(string[] args)
+    {
+        if(args.Length > 0)
+        {
+            return File.ReadAllLines(args[0]).ToArray(); 
+        }
+
+        return Console.In.ReadToEnd().Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+    }
+
 
     static void Main(string[] args)
     {
@@ -160,7 +170,8 @@ class Program
         List<string> currChords=null;
 
         //string[] lines = File.ReadAllLines(args[0]).Where(x => !(x.StartsWith("[") && x.EndsWith("]"))).ToArray();
-        string[] lines = File.ReadAllLines(args[0]).ToArray();
+        //string[] lines = args.Length > 0 ? File.ReadAllLines(args[0]).ToArray() : Console.OpenStandardInput().R;
+        string[] lines = GetInputLines(args);
         for (int i = 0; i < lines.Length; ++i)
         {
             string currLine = lines[i];
